@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servair Limited - HVAC System Pricing Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .calculator-container {
+            background-color: #fff;
+            border-radius: 12px; 
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); 
+            width: 100%;
+            max-width: 1100px;
+            padding: 30px; 
+            box-sizing: border-box;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        #company-logo {
+            max-width: 250px; 
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        header p.subtitle { 
+            font-size: 20px; 
+            font-weight: 700; 
+            color: #2c3e50;
+            font-family: 'Inter', sans-serif; 
+        }
+
+        .main-content {
+            display: flex;
+            flex-wrap: wrap; 
+            gap: 30px;
+        }
+
+        .input-section {
+            flex: 1.2; 
+            min-width: 300px; 
+        }
+
+        .output-section {
+            flex: 1;
+            min-width: 300px; 
+        }
+
+        /* Modern Tab Styling */
+        .tabs {
+            margin-bottom: 25px;
+            display: flex; 
+            border-bottom: 1px solid #e0e0e0; 
+        }
+
+        .tabs button {
+            padding: 12px 18px; 
+            border: none; 
+            background-color: transparent; 
+            cursor: pointer;
+            font-size: 15px; 
+            font-weight: 600;
+            color: #555; 
+            margin-right: 10px; 
+            border-bottom: 3px solid transparent; 
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+        .tabs button:hover {
+            color: #007bff;
+        }
+        .tabs button.active {
+            color: #007bff; 
+            border-bottom: 3px solid #007bff; 
+            font-weight: 700;
+        }
+        /* End Modern Tab Styling */
+
+        .tab-content {
+            display: none; 
+        }
+
+        .tab-content.active {
+            display: block; 
+        }
+
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label { 
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #495057;
+        }
+        .form-group label .label-note { /* Style for the note under the label */
+            display: block;
+            font-size: 0.85em;
+            font-weight: normal;
+            color: #6c757d;
+            margin-top: 3px;
+        }
+
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="email"], 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 6px; 
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+            outline: none;
+        }
+        
+        .dimension-inputs {
+            display: flex;
+            gap: 15px; 
+        }
+        .dimension-inputs .form-group {
+            flex: 1; 
+        }
+        .dimension-inputs .form-group label { 
+            font-size: 0.9em; 
+            margin-bottom: 4px;
+            display: block; 
+            text-align: left;
+        }
+        .dimension-inputs input { 
+            width:100%;
+        }
+
+        .form-group.form-group-checkbox {
+            display: flex;
+            align-items: center; 
+            margin-bottom: 10px; 
+        }
+
+        .form-group-checkbox input[type="checkbox"] {
+            margin-right: 8px;
+            flex-shrink: 0; 
+            width: 16px; 
+            height: 16px;
+        }
+
+        .checkbox-label { 
+            font-weight: normal;
+            font-size: 14px;
+            color: #495057; 
+        }
+
+
+        .slider-container { 
+            margin-top: 5px;
+            display: flex; 
+            align-items: center;
+            position: relative; 
+            z-index: 2; 
+        }
+        .slider-container input[type="range"] {
+            flex-grow: 1; 
+            margin-right: 10px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+        .slider-container .slider-value {
+            min-width: 45px; 
+            text-align: right;
+            font-weight: 600; 
+            vertical-align: middle;
+        }
+        .slider-info {
+            font-size: 0.8em;
+            color: #6c757d;
+            margin-top: 8px; 
+            line-height: 1.4; 
+        }
+
+        .info-box {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px; 
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-box h3 {
+            font-size: 16px;
+            color: #343a40;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #495057;
+            line-height: 1.5;
+        }
+        .info-box p strong {
+            float: right;
+            color: #2c3e50;
+        }
+         .recommended-units-container { 
+            margin-top: 10px;
+        }
+        .recommended-units-container .title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display:block;
+        }
+
+        /* Gradient Recommended Unit Links (Styled as Buttons) */
+        .recommended-units-buttons a {
+            display: inline-block; /* Makes the anchor behave like a block for padding/margin */
+            text-decoration: none; /* Remove default link underline */
+            background-image: linear-gradient(to right, #007bff 0%, #00bfa5 100%); 
+            border: none; 
+            color: white; 
+            padding: 10px 15px; 
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 6px; 
+            cursor: pointer;
+            font-size: 13px;
+            line-height: 1.4;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15); 
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-align: center; 
+        }
+        .recommended-units-buttons a:hover {
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        /* Spans within the link will inherit text color, adjust if needed */
+        .recommended-units-buttons a .unit-brand {
+             display: block;
+             font-weight: 700; 
+        }
+        .recommended-units-buttons a .unit-details {
+            display: block;
+            font-size: 0.9em;
+            color: #e0e0e0; /* Light color for details on gradient */
+            margin-top: 2px;
+        }
+        /* End Gradient Recommended Unit Links Styling */
+
+
+        .upgrade-box {
+            border-radius: 8px; 
+            padding: 20px; 
+            margin-bottom: 20px;
+            text-align: center;
+            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease; 
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+            position: relative; 
+        }
+        .upgrade-box-potential { 
+            background-color: #fff3cd; 
+            border: 1px solid #ffeeba;
+        }
+        .upgrade-box-potential h4,
+        .upgrade-box-potential p,
+        .upgrade-box-potential .switch-text,
+        .upgrade-box-potential .hours-label { 
+            color: #856404;
+        }
+         .upgrade-box-saving { 
+            background-image: linear-gradient(135deg, #28a745 0%, #20c997 100%); 
+            border: 1px solid #1c7430;  
+            color: white; 
+            position: relative;
+            overflow: hidden; 
+        }
+        .upgrade-box-saving::before { 
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+            opacity: 0.7;
+            z-index: 0; 
+        }
+        .upgrade-box-saving h4,
+        .upgrade-box-saving p,
+        .upgrade-box-saving .switch-text,
+        .upgrade-box-saving .hours-label,
+        .upgrade-box-saving .hours-slider-group { 
+            color: white; 
+            position: relative; 
+            z-index: 1;
+        }
+        .upgrade-box-saving strong {
+            color: #f8f9fa; 
+        }
+
+        .upgrade-box h4 {
+            font-size: 16px; 
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 10px; 
+        }
+        .upgrade-box .hours-slider-group { 
+            margin-top: 15px; 
+            margin-bottom: 15px;
+            position: relative; 
+            z-index: 2;         
+        }
+        .upgrade-box .hours-slider-group .hours-label {
+            display: block; 
+            font-size: 14px; 
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .upgrade-box .slider-container { 
+            margin-top: 0; 
+            padding: 0 10px; 
+        }
+
+        .upgrade-box p {
+            font-size: 14px; 
+            margin-bottom: 8px;
+        }
+        .upgrade-box p strong {
+            float: none; 
+            font-weight: 700;
+        }
+        .upgrade-box .switch-text {
+            font-size: 0.85em; 
+            display: block;
+            margin-top:12px;
+        }
+
+
+        .cost-breakdown, .totals-section {
+            margin-bottom: 20px;
+        }
+        .cost-breakdown > h3 { 
+             font-size: 18px; 
+            color: #343a40;
+            margin-top: 0;
+            margin-bottom: 15px; 
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        .cost-breakdown > .cost-item > .description,
+        #cost-additional-features-summary > .description {
+            font-weight: bold;
+            font-style: italic;
+            color: #2c3e50; 
+        }
+
+
+        .cost-item, .total-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 8px;
+            padding: 4px 0;
+        }
+        .cost-item .description, .total-item .description { 
+            color: #495057;
+        }
+        .cost-item .value, .total-item .value {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .cost-item .sub-item { 
+            font-size: 0.9em;
+            color: #6c757d;
+            padding-left: 20px; 
+            margin-top: 4px;
+            display: block; 
+            clear: both; 
+        }
+         .cost-item .sub-item span { 
+            display: inline-block;
+        }
+        .cost-item .sub-item .sub-item-price {
+            float: right;
+            font-weight: 500;
+        }
+
+
+        .total-final .description {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .total-final .value {
+            font-weight: bold;
+            font-size: 18px;
+            color: #007bff;
+        }
+
+        .request-quote-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px; 
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            margin-top: 10px;
+            transition: background-color 0.2s ease;
+        }
+        .request-quote-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .disclaimer {
+            font-size: 12px;
+            color: #6c757d;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.6); 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto; 
+            padding: 25px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px; 
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .modal-content h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-family: 'Inter', sans-serif;
+        }
+        .modal-buttons {
+            margin-top: 25px;
+            text-align: right;
+        }
+        .modal-buttons button {
+            padding: 10px 18px;
+            margin-left: 10px;
+            border-radius: 6px; 
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid transparent;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+        .modal-buttons .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+         .modal-buttons .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .modal-buttons .btn-primary:disabled {
+            background-color: #a0cfff;
+            border-color: #a0cfff;
+            cursor: not-allowed;
+        }
+        .modal-buttons .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            border-color: #6c757d;
+        }
+         .modal-buttons .btn-secondary:hover {
+            background-color: #545b62;
+            border-color: #545b62;
+        }
+        .modal-buttons .btn-whatsapp {
+            background-color: #25D366;
+            color: white;
+            border-color: #1DA851;
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+        }
+         .modal-buttons .btn-whatsapp:hover {
+            background-color: #1DA851;
+            border-color: #1DA851;
+        }
+        .modal-buttons .btn-whatsapp svg {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .modal-step { display: none; }
+        .modal-step.active { display: block; }
+
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .input-section, .output-section {
+                flex: none; 
+                width: 100%; 
+            }
+            .dimension-inputs {
+                flex-direction: column; 
+                gap: 0; 
+            }
+            .dimension-inputs .form-group {
+                margin-bottom: 15px; 
+            }
+            .dimension-inputs .form-group:last-child {
+                margin-bottom: 0; 
+            }
+             .tabs button {
+                font-size: 14px; 
+                padding: 10px 15px;
+            }
+            .modal-content {
+                margin: 20% auto; 
+                width: 95%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="calculator-container">
+        <header>
+            <img src="https://servair.com/media/logo/stores/1/servairlogo.png" alt="Servair Limited Logo" id="company-logo">
+            <p class="subtitle">HVAC System Pricing Calculator</p>
+        </header>
+
+        <div class="main-content">
+            <section class="input-section">
+                 <div class="tabs">
+                    <button id="tab-sqft" class="active" data-tab="sqft">Square Footage</button>
+                    <button id="tab-dims" data-tab="dims">Room Dimensions</button>
+                </div>
+
+                <h2>System Requirements</h2>
+
+                <div id="content-sqft" class="tab-content active">
+                    <div class="form-group">
+                        <label for="room-size-sqft">Room Size (Square Feet)</label>
+                        <input type="number" id="room-size-sqft" value="500" placeholder="e.g. 500" min="0">
+                    </div>
+                </div>
+
+                <div id="content-dims" class="tab-content">
+                    <label>Room Dimensions</label> 
+                    <div class="dimension-inputs">
+                        <div class="form-group">
+                             <input type="number" id="room-length" placeholder="e.g. 20" min="0">
+                            <label for="room-length">Length (ft)</label>
+                        </div>
+                        <div class="form-group">
+                           <input type="number" id="room-width" placeholder="e.g. 25" min="0">
+                            <label for="room-width">Width (ft)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="num-windows">Number of Windows</label>
+                    <input type="number" id="num-windows" value="2" placeholder="e.g. 2" min="0">
+                </div>
+
+                <div class="form-group form-group-checkbox">
+                    <input type="checkbox" id="contains-kitchen">
+                    <label for="contains-kitchen" class="checkbox-label">Room Contains Kitchen?</label>
+                </div>
+
+                <div class="form-group">
+                    <label for="system-type">System Efficiency Options</label>
+                    <select id="system-type">
+                        <option value="seer11" selected>Standard Efficiency (SEER 11)</option>
+                        <option value="seer18">High Efficiency (SEER 18+)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="brand-select">Brand</label>
+                    <select id="brand-select">
+                        <option value="">-- Select Brand --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="installation-location">Installation Location</label>
+                    <select id="installation-location">
+                        <option value="ground_floor" selected>Ground Floor</option>
+                        <option value="first_floor">First Floor</option>
+                        <option value="roof">Roof</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="additional-piping">Total Additional Piping Length
+                        <span class="label-note"><b>Please read the guide under the slider before using it.</b></span>
+                    </label>
+                    <div class="slider-container">
+                        <input type="range" id="additional-piping" min="0" max="60" value="0" step="1">
+                        <span class="slider-value" id="piping-value">0 ft</span>
+                    </div>
+                    <p class="slider-info">
+                        Each recommended unit includes 10ft of piping in its cost. 
+                        Please input any *additional* piping length required if the distance between an evaporator (indoor unit) 
+                        and its condenser (outdoor unit) exceeds this included 10ft. This value is the sum for all units.
+                    </p>
+                </div>
+
+                <h2>Additional Features</h2>
+                <div class="form-group form-group-checkbox">
+                    <input type="checkbox" id="lg-purification" data-price="5100">
+                    <label for="lg-purification" class="checkbox-label">LG Air Purification System (TT$5,100)</label>
+                </div>
+                <div class="form-group form-group-checkbox">
+                    <input type="checkbox" id="wifi-remote" data-price="250">
+                    <label for="wifi-remote" class="checkbox-label">WiFi Remote Control (TT$250)</label>
+                </div>
+            </section>
+
+            <section class="output-section">
+                <div class="info-box">
+                    <h3>Your HVAC System</h3>
+                    <p>Room Size <strong id="display-room-size">0 sq ft</strong></p>
+                    <p>Required BTU <strong id="display-req-btu">0 BTU</strong></p>
+                    <div class="recommended-units-container">
+                        <span class="title">Recommended Units (Click on Unit to view on our Site)</span>
+                         <div class="recommended-units-buttons" id="recommended-units-display">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="upgrade-box upgrade-box-potential" id="upgrade-savings-box">
+                    <h4 id="upgrade-box-title">See your savings if you upgrade to High Efficiency</h4>
+                    <div class="hours-slider-group">
+                        <label for="hours-of-use" class="hours-label">Hours of Use per Day</label>
+                        <div class="slider-container">
+                            <input type="range" id="hours-of-use" min="1" max="24" value="8" step="1">
+                            <span class="slider-value" id="hours-value">8 hrs</span>
+                        </div>
+                    </div>
+                    <p>Potential Annual Savings <strong id="display-annual-savings">TT$0</strong></p>
+                    <p>Potential 10-Year Savings <strong id="display-10year-savings">TT$0</strong></p>
+                    <span class="switch-text" id="upgrade-box-subtitle">Switch to high efficiency units to save on energy costs</span>
+                </div>
+
+                <div class="cost-breakdown">
+                    <h3>Cost Breakdown</h3>
+                    <div class="cost-item">
+                        <span class="description">Units</span>
+                        <span class="value" id="cost-units-total">TT$0</span>
+                    </div>
+                    <div id="cost-units-sub-items-details"></div>
+                    
+                    <div class="cost-item">
+                        <span class="description">Installation</span>
+                        <span class="value" id="cost-installation-total">TT$0</span>
+                    </div>
+                     <div id="cost-installation-sub-items-details"></div>
+                    
+                    <div class="cost-item">
+                        <span class="description">Installation Materials</span>
+                        <span class="value" id="cost-materials-total">TT$0</span>
+                    </div>
+                     <div id="cost-materials-sub-items-details"></div>
+
+                     <div class="cost-item" id="cost-additional-features-summary" style="display:none;">
+                        <span class="description">Additional Features</span>
+                        <span class="value" id="cost-additional-features-total">TT$0</span>
+                    </div>
+                     <div id="cost-additional-features-sub-items-details" style="display:none;"></div>
+                </div>
+
+                <div class="totals-section">
+                    <div class="total-item">
+                        <span class="description">Subtotal (excl. VAT)</span>
+                        <span class="value" id="total-subtotal">TT$0</span>
+                    </div>
+                    <div class="total-item">
+                        <span class="description">VAT (12.5%)</span>
+                        <span class="value" id="total-vat">TT$0</span>
+                    </div>
+                    <hr>
+                    <div class="total-item total-final">
+                        <span class="description">Total (incl. VAT)</span>
+                        <span class="value" id="total-final-vat">TT$0</span>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>System Information</h3>
+                    <p>SEER Rating <strong id="display-seer-rating">0</strong></p>
+                    <p>Type <strong id="display-system-type">Highwall Split</strong></p>
+                </div>
+
+                <button class="request-quote-btn" id="request-quote-main-btn">Request Detailed Quote</button>
+                <p class="disclaimer">All prices are exclusive of VAT unless otherwise stated.</p>
+            </section>
+        </div>
+    </div>
+
+    <div id="quote-modal" class="modal">
+        <div class="modal-content">
+            <div id="modal-step-1" class="modal-step active">
+                <h2>Your Contact Information</h2>
+                <form id="quote-contact-form">
+                    <div class="form-group">
+                        <label for="modal-first-name">First Name</label>
+                        <input type="text" id="modal-first-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-last-name">Last Name</label>
+                        <input type="text" id="modal-last-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-address">Address</label>
+                        <textarea id="modal-address" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-email">Email Address</label>
+                        <input type="email" id="modal-email" required>
+                    </div>
+                    <div class="modal-buttons">
+                        <button type="button" class="btn-secondary" id="modal-cancel-btn">Cancel</button>
+                        <button type="button" class="btn-primary" id="modal-next-btn">Next</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="modal-step-2" class="modal-step">
+                <h2>Confirm Submission</h2>
+                <p>Your quote estimation is ready. Submit via WhatsApp to discuss with our team.</p>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-secondary" id="modal-back-btn">Back</button>
+                    <button type="button" class="btn-whatsapp" id="modal-submit-whatsapp-btn">
+                        <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d=" M19.11 17.205c-.372 0-1.088 1.39-1.088 1.39s-.213.575-.327.575c-.114 0-.577-.213-.577-.213s-1.092-.787-1.849-.787c-.372 0-.99.426-1.237.426h-.002c-.246 0-.873-.213-.873-.213s-1.092-.787-1.849-.787c-.372 0-.99.426-1.237.426h-.002c-.246 0-.873-.213-.873-.213s-1.092-.787-1.849-.787c-.372 0-.99.426-1.237.426h-.002c-.246 0-.873-.213-.873-.213s-.213-.575-.327-.575c-.114 0-.577.213-.577.213s-1.092.787-1.849.787c-.372 0-.99.426-1.237.426h-.002c-.246 0-.873-.213-.873-.213s-1.092-.787-1.849-.787c-.372 0-.99.426-1.237.426h-.002c-.246 0-.873-.213-.873-.213s-.213-.575-.327-.575c-.114 0-.577.213-.577.213s-.922.735-1.73.735c-.487 0-1.233-.264-1.233-.264S4 18.422 4 16.967c0-1.342 1.038-2.59 2.605-2.59h.002c.372 0 1.088-1.39 1.088-1.39s.213-.575.327-.575c.114 0 .577.213.577.213s1.092.787 1.849.787c.372 0 .99-.426 1.237-.426h.002c.246 0 .873.213.873.213s1.092.787 1.849.787c.372 0 .99-.426 1.237-.426h.002c.246 0 .873.213.873.213s1.092.787 1.849.787c.372 0 .99-.426 1.237-.426h.002c.246 0 .873.213.873.213s1.092.787 1.849.787c.372 0 .99-.426 1.237-.426h.002c.246 0 .873.213.873.213s.213.575.327.575c.114 0 .577-.213.577-.213s.922-.735 1.73-.735c.487 0 1.233.264 1.233.264S28 13.033 28 14.488c0 1.342-1.038 2.59-2.605 2.59h-.002c-.372 0-1.088 1.39-1.088 1.39s-.213.575-.327-.575c-.114 0-.577-.213-.577-.213s-1.092-.787-1.849-.787zm-7.972-2.402c0-.414-.335-.75-.75-.75s-.75.336-.75.75v.375c0 .414.335.75.75.75s.75-.336.75-.75v-.375zm-2.24-.001c0-.414-.335-.75-.75-.75s-.75.336-.75.75v.375c0 .414.335.75.75.75s.75-.336.75-.75v-.375zm-2.24.001c0-.414-.335-.75-.75-.75s-.75.336-.75.75v.375c0 .414.335.75.75.75s.75-.336.75-.75v-.375zm-2.24-.001c0-.414-.335-.75-.75-.75s-.75.336-.75.75v.375c0 .414.335.75.75.75s.75-.336.75-.75v-.375zm-2.24.001c0-.414-.335-.75-.75-.75s-.75.336-.75.75v.375c0 .414.335.75.75.75s.75-.336.75-.75v-.375z"></path></svg>
+                        Submit via WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3CX Live Chat Snippet -->
+    <call-us-selector phonesystem-url="https://servair.3cx.ag" party="LiveChat531934"></call-us-selector>
+    <script src="https://downloads-global.3cx.com/downloads/livechatandtalk/v1/callus.js" id="tcx-callus-js" charset="utf-8"></script>
+    <!-- End 3CX Live Chat Snippet -->
+
+    <script>
+        // --- Constants & Unit Data ---
+        const VAT_RATE = 0.125; 
+        const TTD_PER_KWH = 0.35; 
+        const DAYS_PER_YEAR = 365;
+        const INSTALL_PER_UNIT_EXCL_VAT = 800;
+        const FIRST_FLOOR_ADDON_INCL_VAT = 100;
+        const FIRST_FLOOR_ADDON_EXCL_VAT = parseFloat((FIRST_FLOOR_ADDON_INCL_VAT / (1 + VAT_RATE)).toFixed(2));
+        const PIPING_PER_FOOT_EXCL_VAT = 75;
+        const TRUNKING_10FT_INCL_VAT = 100;
+        const TRUNKING_10FT_EXCL_VAT = parseFloat((TRUNKING_10FT_INCL_VAT / (1 + VAT_RATE)).toFixed(2));
+        const BRACKET_PER_UNIT_INCL_VAT = 100; 
+        const BRACKET_PER_UNIT_EXCL_VAT = parseFloat((BRACKET_PER_UNIT_INCL_VAT / (1 + VAT_RATE)).toFixed(2)); 
+        const INCLUDED_PIPING_PER_UNIT = 10;
+        const ADDITIONAL_PIPING_LABOUR_SURCHARGE_INCL_VAT = 50;
+        const ADDITIONAL_PIPING_LABOUR_SURCHARGE_EXCL_VAT = parseFloat((ADDITIONAL_PIPING_LABOUR_SURCHARGE_INCL_VAT / (1 + VAT_RATE)).toFixed(2));
+        const WHATSAPP_NUMBER = "18686581911"; 
+
+
+        const rawUnitsArray = [
+            { id: 'cw_s11_12k', brand: 'Coldwave', btu: 12000, seer: 11, priceInclVAT: 2100, productUrl: 'https://servair.com/residential/residential-air-conditioners-trinidad/on-off/ssafb-12crn1-nb8.html' }, 
+            { id: 'cw_s11_18k', brand: 'Coldwave', btu: 18000, seer: 11, priceInclVAT: 3200, productUrl: 'https://servair.com/residential/residential-air-conditioners-trinidad/on-off/ssafc-18crn1-nb8.html' },
+            { id: 'cw_s11_24k', brand: 'Coldwave', btu: 24000, seer: 11, priceInclVAT: 4400, productUrl: 'https://servair.com/residential/residential-air-conditioners-trinidad/on-off/ssafd-24crn1-nb8.html' },
+            { id: 'cw_s18_12k', brand: 'Coldwave', btu: 11000, seer: 18, priceInclVAT: 3000, productUrl: 'https://servair.com/residential/residential-air-conditioners-trinidad/inverters/ssafb-12crdn1-nq0w.html' },
+            { id: 'cw_s18_18k', brand: 'Coldwave', btu: 17000, seer: 18, priceInclVAT: 4000, productUrl: 'https://servair.com/residential/residential-air-conditioners-trinidad/inverters/ssafc-18crdn1-nq0w-i.html' },
+            { id: 'cw_s18_24k', brand: 'Coldwave', btu: 21000, seer: 18, priceInclVAT: 5000, productUrl: 'https://servair.com/residential/residential-air-conditioners-trinidad/inverters/coldwave-forest-24k-inverter.html' },
+            { id: 'gr_s18_12k', brand: 'Gree',     btu: 12000, seer: 18, priceInclVAT: 3710, productUrl: 'https://servair.com/residential/residential-air-conditioners-trinidad/inverters/gree-lomo-17-seer-12000btu-h-air-conditioner.html' },
+            { id: 'lg_s18_12k', brand: 'LG',       btu: 12000, seer: 18, priceInclVAT: 6800, productUrl: 'https://servair.com/residential/residential-air-conditioners-trinidad/inverters/lg-dual-cool-inverter-air-conditioner.html' },
+        ]; 
+
+        const unitsData = rawUnitsArray.map(unit => ({ 
+            ...unit,
+            priceExclVAT: parseFloat((unit.priceInclVAT / (1 + VAT_RATE)).toFixed(2)),
+            vatAmount: parseFloat((unit.priceInclVAT - (unit.priceInclVAT / (1 + VAT_RATE))).toFixed(2))
+        }));
+
+        // --- DOM Elements ---
+        const pipingSlider = document.getElementById('additional-piping');
+        const pipingValueDisplay = document.getElementById('piping-value');
+        const hoursOfUseSlider = document.getElementById('hours-of-use'); 
+        const hoursValueDisplay = document.getElementById('hours-value');   
+        const tabSqftBtn = document.getElementById('tab-sqft');
+        const tabDimsBtn = document.getElementById('tab-dims');
+        const contentSqft = document.getElementById('content-sqft');
+        const contentDims = document.getElementById('content-dims');
+        const roomSizeSqftInput = document.getElementById('room-size-sqft');
+        const roomLengthInput = document.getElementById('room-length');
+        const roomWidthInput = document.getElementById('room-width');
+        const numWindowsInput = document.getElementById('num-windows');
+        const containsKitchenCheckbox = document.getElementById('contains-kitchen');
+        const systemTypeSelect = document.getElementById('system-type');
+        const brandSelect = document.getElementById('brand-select'); 
+        const installationLocationSelect = document.getElementById('installation-location');
+        const lgPurificationCheckbox = document.getElementById('lg-purification');
+        const wifiRemoteCheckbox = document.getElementById('wifi-remote');
+        
+        const displayRoomSize = document.getElementById('display-room-size');
+        const displayReqBtu = document.getElementById('display-req-btu');
+        const displaySeerRating = document.getElementById('display-seer-rating');
+        const recommendedUnitsDisplay = document.getElementById('recommended-units-display');
+
+        const upgradeSavingsBox = document.getElementById('upgrade-savings-box');
+        const upgradeBoxTitle = document.getElementById('upgrade-box-title');
+        const displayAnnualSavings = document.getElementById('display-annual-savings');
+        const display10YearSavings = document.getElementById('display-10year-savings');
+        const upgradeBoxSubtitle = document.getElementById('upgrade-box-subtitle');
+
+        const costUnitsTotalDisplay = document.getElementById('cost-units-total');
+        const costUnitsSubItemsDetailsDisplay = document.getElementById('cost-units-sub-items-details');
+        const costInstallationTotalDisplay = document.getElementById('cost-installation-total');
+        const costInstallationSubItemsDetailsDisplay = document.getElementById('cost-installation-sub-items-details');
+        const costMaterialsTotalDisplay = document.getElementById('cost-materials-total');
+        const costMaterialsSubItemsDetailsDisplay = document.getElementById('cost-materials-sub-items-details');
+        const costAdditionalFeaturesSummaryDiv = document.getElementById('cost-additional-features-summary');
+        const costAdditionalFeaturesTotalDisplay = document.getElementById('cost-additional-features-total');
+        const costAdditionalFeaturesSubItemsDetailsDisplay = document.getElementById('cost-additional-features-sub-items-details');
+
+        const totalSubtotalDisplay = document.getElementById('total-subtotal');
+        const totalVatDisplay = document.getElementById('total-vat');
+        const totalFinalVatDisplay = document.getElementById('total-final-vat');
+
+        const requestQuoteMainBtn = document.getElementById('request-quote-main-btn');
+        const quoteModal = document.getElementById('quote-modal');
+        const modalStep1 = document.getElementById('modal-step-1');
+        const modalStep2 = document.getElementById('modal-step-2');
+        const quoteContactForm = document.getElementById('quote-contact-form');
+        const modalFirstNameInput = document.getElementById('modal-first-name');
+        const modalLastNameInput = document.getElementById('modal-last-name');
+        const modalAddressInput = document.getElementById('modal-address');
+        const modalEmailInput = document.getElementById('modal-email');
+        const modalCancelBtn = document.getElementById('modal-cancel-btn');
+        const modalNextBtn = document.getElementById('modal-next-btn');
+        const modalBackBtn = document.getElementById('modal-back-btn');
+        const modalSubmitWhatsappBtn = document.getElementById('modal-submit-whatsapp-btn');
+
+        let currentSqFt = 0;
+        let currentRequiredBTU = 0;
+        let currentlyRecommendedUnits = []; 
+        let currentHoursOfUse = 8; 
+        let currentCosts = {}; 
+        let userContactInfo = {}; 
+
+
+        function setupEventListeners() {
+            const inputsToWatch = [
+                roomSizeSqftInput, roomLengthInput, roomWidthInput,
+                numWindowsInput, containsKitchenCheckbox, 
+                pipingSlider, installationLocationSelect,
+                lgPurificationCheckbox, wifiRemoteCheckbox
+            ];
+            inputsToWatch.forEach(input => {
+                if (input) { 
+                    const eventType = (input.type === 'checkbox' || input.tagName === 'SELECT' || input.type === 'range') ? 'change' : 'input';
+                    input.addEventListener(eventType, calculateAndUpdateAll);
+                }
+            });
+           
+            if (systemTypeSelect) {
+                systemTypeSelect.addEventListener('change', () => {
+                    updateBrandDropdown();
+                    calculateAndUpdateAll();
+                });
+            }
+            if (brandSelect) {
+                brandSelect.addEventListener('change', calculateAndUpdateAll);
+            }
+
+            if (tabSqftBtn) tabSqftBtn.addEventListener('click', () => switchTab(tabSqftBtn, contentSqft));
+            if (tabDimsBtn) tabDimsBtn.addEventListener('click', () => switchTab(tabDimsBtn, contentDims));
+            
+            if (pipingSlider && pipingValueDisplay) {
+                 pipingSlider.addEventListener('input', () => { 
+                    pipingValueDisplay.textContent = pipingSlider.value + ' ft';
+                });
+            }
+            if (hoursOfUseSlider && hoursValueDisplay) { 
+                 hoursOfUseSlider.addEventListener('input', () => { 
+                    currentHoursOfUse = parseInt(hoursOfUseSlider.value);
+                    hoursValueDisplay.textContent = currentHoursOfUse + ' hrs';
+                    calculateAndUpdateAll(); 
+                });
+            }
+
+            if(requestQuoteMainBtn) requestQuoteMainBtn.addEventListener('click', openQuoteModal);
+            if(modalCancelBtn) modalCancelBtn.addEventListener('click', closeQuoteModal);
+            if(modalNextBtn) modalNextBtn.addEventListener('click', handleModalNext);
+            if(modalBackBtn) modalBackBtn.addEventListener('click', handleModalBack);
+            if(modalSubmitWhatsappBtn) modalSubmitWhatsappBtn.addEventListener('click', handleSubmitToWhatsApp);
+            
+            const modalInputs = [modalFirstNameInput, modalLastNameInput, modalAddressInput, modalEmailInput];
+            modalInputs.forEach(input => {
+                if (input) input.addEventListener('input', checkModalFormValidity);
+            });
+        }
+        
+        function openQuoteModal() {
+            if(quoteModal) {
+                quoteModal.style.display = 'block';
+                quoteModal.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
+                modalStep1.classList.add('active');
+                modalStep2.classList.remove('active');
+                if(quoteContactForm) quoteContactForm.reset(); 
+                checkModalFormValidity(); 
+            }
+        }
+        function closeQuoteModal() {
+            if(quoteModal) quoteModal.style.display = 'none';
+        }
+
+        function checkModalFormValidity() {
+            if(modalNextBtn && quoteContactForm) {
+                modalNextBtn.disabled = !quoteContactForm.checkValidity();
+            }
+        }
+
+        function handleModalNext() {
+            if (quoteContactForm && quoteContactForm.checkValidity()) {
+                userContactInfo = {
+                    firstName: modalFirstNameInput.value,
+                    lastName: modalLastNameInput.value,
+                    address: modalAddressInput.value,
+                    email: modalEmailInput.value,
+                };
+                modalStep1.classList.remove('active');
+                modalStep2.classList.add('active');
+            } else if (quoteContactForm) {
+                quoteContactForm.reportValidity(); 
+            }
+        }
+
+        function handleModalBack() {
+            modalStep2.classList.remove('active');
+            modalStep1.classList.add('active');
+        }
+
+        function gatherQuoteDataForWhatsApp() {
+            let data = "Servair Limited - HVAC Quote Estimation\n";
+            data += "---------------------------------------\n";
+            data += "CUSTOMER DETAILS:\n";
+            data += `Name: ${userContactInfo.firstName || ''} ${userContactInfo.lastName || ''}\n`;
+            data += `Address: ${userContactInfo.address || ''}\n`;
+            data += `Email: ${userContactInfo.email || ''}\n`;
+            data += "---------------------------------------\n";
+            data += "SYSTEM REQUIREMENTS:\n";
+            if (contentSqft && contentSqft.classList.contains('active')) {
+                 data += `Room Size: ${roomSizeSqftInput.value} sq ft\n`;
+            } else {
+                 data += `Room Dimensions: ${roomLengthInput.value} ft (L) x ${roomWidthInput.value} ft (W)\n`;
+            }
+            data += `Number of Windows: ${numWindowsInput.value}\n`;
+            data += `Room Contains Kitchen?: ${containsKitchenCheckbox.checked ? 'Yes' : 'No'}\n`;
+            data += `System Type: ${systemTypeSelect.options[systemTypeSelect.selectedIndex].text}\n`;
+            data += `Selected Brand: ${brandSelect.value === "all" ? "All Brands (System Recommended)" : brandSelect.options[brandSelect.selectedIndex].text}\n`;
+            data += `Installation Location: ${installationLocationSelect.options[installationLocationSelect.selectedIndex].text}\n`;
+            data += `Additional Piping: ${pipingSlider.value} ft\n`;
+            data += `Daily Hours of Use: ${currentHoursOfUse} hrs\n`;
+            
+            data += "\nADDITIONAL FEATURES:\n";
+            let featuresSelected = false;
+            if (lgPurificationCheckbox.checked) { data += "- LG Air Purification System\n"; featuresSelected = true;}
+            if (wifiRemoteCheckbox.checked) { data += "- WiFi Remote Control\n"; featuresSelected = true;}
+            if (!featuresSelected) { data += "None\n"; }
+
+            data += "\n---------------------------------------\n";
+            data += "ESTIMATION RESULTS:\n";
+            data += `Required BTU: ${currentRequiredBTU.toLocaleString()} BTU\n`;
+            data += "Recommended Units:\n";
+            if (currentlyRecommendedUnits && currentlyRecommendedUnits.length > 0) {
+                currentlyRecommendedUnits.forEach(unit => {
+                    data += `  - ${unit.brand} ${unit.btu / 1000}K BTU\n`;
+                });
+            } else {
+                data += "  None\n";
+            }
+
+            data += "\nCOST BREAKDOWN (Excl. VAT):\n";
+            if(currentCosts.unitsDetails && currentCosts.unitsDetails.length > 0){
+                currentCosts.unitsDetails.forEach(item => data += `${item.description}: ${formatPrice(item.price)}\n`);
+            } else if (currentCosts.units > 0) {
+                 data += `Total Units Cost: ${formatPrice(currentCosts.units)}\n`;
+            }
+
+            if(currentCosts.installationDetails && currentCosts.installationDetails.length > 0){
+                 data += "\nInstallation:\n";
+                currentCosts.installationDetails.forEach(item => data += `  ${item.description}: ${formatPrice(item.price)}\n`);
+            } else if (currentCosts.installationTotal > 0) {
+                data += `Total Installation: ${formatPrice(currentCosts.installationTotal)}\n`;
+            }
+            
+            if(currentCosts.materialsDetails && currentCosts.materialsDetails.length > 0){
+                 data += "\nInstallation Materials:\n";
+                currentCosts.materialsDetails.forEach(item => data += `  ${item.description}: ${formatPrice(item.price)}\n`);
+            } else if (currentCosts.materialsTotal > 0) {
+                 data += `Total Materials: ${formatPrice(currentCosts.materialsTotal)}\n`;
+            }
+
+            if(currentCosts.additionalFeaturesDetails && currentCosts.additionalFeaturesDetails.length > 0){
+                data += "\nAdditional Features Selected:\n";
+                currentCosts.additionalFeaturesDetails.forEach(item => data += `  ${item.description}: ${formatPrice(item.price)}\n`);
+            }
+            
+            data += "\n---------------------------------------\n";
+            data += `SUBTOTAL (Excl. VAT): ${formatPrice(currentCosts.subtotalExclVAT)}\n`;
+            data += `VAT (12.5%): ${formatPrice(currentCosts.vatAmount)}\n`;
+            data += `TOTAL (Incl. VAT): ${formatPrice(currentCosts.totalInclVAT)}\n`;
+            data += "---------------------------------------\n";
+            data += "Note: This is an estimation. A site visit may be required for a final quote.\n";
+            return data;
+        }
+
+        function handleSubmitToWhatsApp() {
+            const message = gatherQuoteDataForWhatsApp();
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+            closeQuoteModal();
+        }
+        
+        function updateBrandDropdown() { 
+            const selectedSystemType = systemTypeSelect.value;
+            let seerFilterValue;
+
+            if (selectedSystemType === 'seer11') seerFilterValue = 11;
+            else if (selectedSystemType === 'seer18') seerFilterValue = 18; 
+            else {
+                brandSelect.innerHTML = '<option value="">-- Select System Type --</option>';
+                return;
+            }
+
+            const availableBrands = unitsData
+                .filter(unit => (selectedSystemType === 'seer11' ? unit.seer === seerFilterValue : unit.seer >= seerFilterValue))
+                .map(unit => unit.brand)
+                .filter((value, index, self) => self.indexOf(value) === index); 
+
+            brandSelect.innerHTML = ''; 
+
+            if (availableBrands.length === 0) {
+                brandSelect.innerHTML = '<option value="">-- No Brands --</option>';
+            } else {
+                 brandSelect.innerHTML = '<option value="all">All Brands</option>'; 
+                availableBrands.forEach(brand => {
+                    const option = document.createElement('option');
+                    option.value = brand;
+                    option.textContent = brand;
+                    brandSelect.appendChild(option);
+                });
+                brandSelect.value = "all"; 
+            }
+        }
+        function switchTab(activeTabBtn, activeContent) { 
+            [tabSqftBtn, tabDimsBtn].forEach(btn => btn.classList.remove('active'));
+            [contentSqft, contentDims].forEach(content => content.classList.remove('active'));
+            activeTabBtn.classList.add('active');
+            activeContent.classList.add('active');
+            calculateAndUpdateAll(); 
+        }
+        function calculateSquareFootage() { 
+            let sqFt = 0;
+            if (contentSqft && contentSqft.classList.contains('active')) {
+                sqFt = parseFloat(roomSizeSqftInput.value) || 0;
+            } else if (contentDims && contentDims.classList.contains('active')) {
+                const length = parseFloat(roomLengthInput.value) || 0;
+                const width = parseFloat(roomWidthInput.value) || 0;
+                sqFt = length * width;
+                if (sqFt > 0 && roomSizeSqftInput.value !== sqFt.toString()) { 
+                    roomSizeSqftInput.value = sqFt;
+                } else if (sqFt === 0 && roomSizeSqftInput.value) { 
+                     sqFt = parseFloat(roomSizeSqftInput.value) || 0;
+                }
+            }
+            currentSqFt = sqFt < 0 ? 0 : sqFt; 
+            return currentSqFt;
+        }
+        function calculateRequiredBTU() { 
+            const sqFt = currentSqFt; 
+            const numWindowsVal = parseInt(numWindowsInput.value) || 0;
+            const hasKitchen = containsKitchenCheckbox.checked;
+
+            let btu = sqFt * 60; 
+            btu += (numWindowsVal < 0 ? 0 : numWindowsVal) * 50; 
+            if (hasKitchen) btu += 1000; 
+            currentRequiredBTU = btu < 0 ? 0 : btu; 
+            return currentRequiredBTU;
+        }
+        function findBestNUnitSolution(n, targetBTU, availableUnits) { 
+            if (n <= 0 || !availableUnits || availableUnits.length === 0) return null;
+            let bestSolution = null;
+            let minTotalBTU = Infinity;
+
+            if (n === 1) {
+                for (const unit of availableUnits) { 
+                    if (unit.btu >= targetBTU) {
+                        return { units: [unit], totalBTU: unit.btu, count: 1 }; 
+                    }
+                }
+                return null; 
+            }
+            if (n === 2) {
+                for (let i = 0; i < availableUnits.length; i++) {
+                    for (let j = i; j < availableUnits.length; j++) {
+                        const u1 = availableUnits[i];
+                        const u2 = availableUnits[j];
+                        const combinedBTU = u1.btu + u2.btu;
+                        if (combinedBTU >= targetBTU) {
+                            if (combinedBTU < minTotalBTU) {
+                                minTotalBTU = combinedBTU;
+                                bestSolution = { units: [u1, u2].sort((a,b)=>a.btu-b.btu), totalBTU: combinedBTU, count: 2 };
+                            }
+                        }
+                    }
+                }
+            }
+            if (n === 3) {
+                 for (let i = 0; i < availableUnits.length; i++) {
+                    for (let j = i; j < availableUnits.length; j++) {
+                        for (let k = j; k < availableUnits.length; k++) {
+                            const u1 = availableUnits[i];
+                            const u2 = availableUnits[j];
+                            const u3 = availableUnits[k];
+                            const combinedBTU = u1.btu + u2.btu + u3.btu;
+                            if (combinedBTU >= targetBTU) {
+                                if (combinedBTU < minTotalBTU) {
+                                    minTotalBTU = combinedBTU;
+                                    bestSolution = { units: [u1, u2, u3].sort((a,b)=>a.btu-b.btu), totalBTU: combinedBTU, count: 3 };
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return bestSolution;
+        }
+        function recommendUnits(forBTU, forSEER, forBrand = "all") { 
+            let recommended = [];
+            if (forBTU <= 0) return recommended;
+
+            let seerFilterValue;
+            if (forSEER === 'seer11') seerFilterValue = 11;
+            else if (forSEER === 'seer18') seerFilterValue = 18;
+            else return recommended;
+            
+            let relevantAvailableUnits = unitsData.filter(unit => 
+                (forSEER === 'seer11' ? unit.seer === seerFilterValue : unit.seer >= seerFilterValue) &&
+                (forBrand === "all" || unit.brand === forBrand)
+            );
+
+            if (relevantAvailableUnits.length === 0) return recommended;
+            relevantAvailableUnits.sort((a, b) => a.btu - b.btu);
+
+            const solution1 = findBestNUnitSolution(1, forBTU, relevantAvailableUnits);
+            const solution2 = findBestNUnitSolution(2, forBTU, relevantAvailableUnits);
+            const solution3 = findBestNUnitSolution(3, forBTU, relevantAvailableUnits);
+
+            if (solution1) recommended = solution1.units;
+            else if (solution2) recommended = solution2.units;
+            else if (solution3) recommended = solution3.units;
+            
+            return recommended;
+        }
+        function calculateAnnualEnergyCost(unitsArray, hoursPerDay) { 
+            if (!unitsArray || unitsArray.length === 0 || hoursPerDay <= 0) return 0;
+            let totalAnnualCost = 0;
+            unitsArray.forEach(unit => {
+                const kWhPerYear = (unit.btu / unit.seer) * hoursPerDay * DAYS_PER_YEAR / 1000;
+                totalAnnualCost += kWhPerYear * TTD_PER_KWH;
+            });
+            return totalAnnualCost;
+        }
+        function calculateEnergySavings() { 
+            const selectedSystemType = systemTypeSelect.value;
+            const selectedBrand = brandSelect.value; 
+            currentHoursOfUse = parseInt(hoursOfUseSlider.value); 
+
+            const currentRecUnits = recommendUnits(currentRequiredBTU, selectedSystemType, selectedBrand);
+           
+            if (currentRequiredBTU <= 0 || !currentRecUnits || currentRecUnits.length === 0) { 
+                 updateUpgradeBox(0, 0); 
+                return;
+            }
+            
+            const costCurrentSystem = calculateAnnualEnergyCost(currentRecUnits, currentHoursOfUse);
+            let costAlternativeSystem = 0;
+            let annualSavings = 0;
+
+            if (selectedSystemType === 'seer11') {
+                let alternativeBrand = selectedBrand;
+                const brandHasHEUnits = unitsData.some(u => u.brand === selectedBrand && u.seer >= 18);
+                if (!brandHasHEUnits && selectedBrand !== "all") alternativeBrand = "all";
+
+                const alternativeUnits = recommendUnits(currentRequiredBTU, 'seer18', alternativeBrand);
+                costAlternativeSystem = calculateAnnualEnergyCost(alternativeUnits, currentHoursOfUse);
+                if (alternativeUnits && alternativeUnits.length > 0 && costAlternativeSystem > 0 && costCurrentSystem > 0) { 
+                     annualSavings = costCurrentSystem - costAlternativeSystem;
+                } else {
+                    annualSavings = 0; 
+                }
+            } else { 
+                let alternativeBrand = selectedBrand;
+                 const brandHasSEUnits = unitsData.some(u => u.brand === selectedBrand && u.seer === 11);
+                if (!brandHasSEUnits && selectedBrand !== "all") alternativeBrand = "all";
+
+                const alternativeUnits = recommendUnits(currentRequiredBTU, 'seer11', alternativeBrand);
+                costAlternativeSystem = calculateAnnualEnergyCost(alternativeUnits, currentHoursOfUse);
+                 if (alternativeUnits && alternativeUnits.length > 0 && costCurrentSystem > 0 && costAlternativeSystem > 0) { 
+                    annualSavings = costAlternativeSystem - costCurrentSystem;
+                } else {
+                    annualSavings = 0;
+                }
+            }
+            updateUpgradeBox(annualSavings, annualSavings * 10);
+        }
+        function updateUpgradeBox(annual, tenYear) { 
+            const selectedSystemType = systemTypeSelect.value;
+            annual = Math.max(0, annual); 
+            tenYear = Math.max(0, tenYear);
+
+            if (selectedSystemType === 'seer11') {
+                upgradeSavingsBox.className = 'upgrade-box upgrade-box-potential';
+                upgradeBoxTitle.textContent = 'See your savings if you upgrade to High Efficiency';
+                displayAnnualSavings.innerHTML = `TT$${annual.toFixed(0).toLocaleString()}`;
+                display10YearSavings.innerHTML = `TT$${tenYear.toFixed(0).toLocaleString()}`;
+                upgradeBoxSubtitle.textContent = 'Switch to high efficiency units to save on energy costs.';
+            } else { 
+                upgradeSavingsBox.className = 'upgrade-box upgrade-box-saving';
+                upgradeBoxTitle.textContent = "You're Saving with High Efficiency!";
+                displayAnnualSavings.innerHTML = `TT$${annual.toFixed(0).toLocaleString()}`; 
+                display10YearSavings.innerHTML = `TT$${tenYear.toFixed(0).toLocaleString()}`;
+                upgradeBoxSubtitle.textContent = 'You made a smart choice for energy savings!';
+            }
+        }
+        function displayRecommendedUnitsDOM(unitsToDisplay) { 
+            recommendedUnitsDisplay.innerHTML = ''; 
+            if (unitsToDisplay && unitsToDisplay.length > 0) {
+                unitsToDisplay.forEach(unit => {
+                    const link = document.createElement('a'); 
+                    link.href = unit.productUrl || '#'; 
+                    link.target = '_blank'; 
+                    link.rel = 'noopener noreferrer'; 
+                    
+                    // The content (brand and details) is now directly inside the anchor
+                    const brandSpan = document.createElement('span');
+                    brandSpan.className = 'unit-brand';
+                    brandSpan.textContent = unit.brand;
+                    link.appendChild(brandSpan);
+
+                    const detailsSpan = document.createElement('span');
+                    detailsSpan.className = 'unit-details';
+                    detailsSpan.textContent = `${(unit.btu / 1000)}K BTU`;
+                    link.appendChild(detailsSpan);
+                    
+                    recommendedUnitsDisplay.appendChild(link); 
+                });
+            } else {
+                recommendedUnitsDisplay.innerHTML = '<p style="font-size: 14px; color: #555;">No units match criteria or meet BTU with up to 3 units.</p>';
+            }
+        }
+        function updateDisplayValues() { 
+            displayRoomSize.textContent = `${currentSqFt.toLocaleString()} sq ft`;
+            displayReqBtu.textContent = `${currentRequiredBTU.toLocaleString()} BTU`;
+            
+            const selectedSystemType = systemTypeSelect.value;
+            if (selectedSystemType === 'seer11') displaySeerRating.textContent = '11';
+            else if (selectedSystemType === 'seer18') displaySeerRating.textContent = '18+'; 
+            
+            displayRecommendedUnitsDOM(currentlyRecommendedUnits); 
+        }
+        function calculateAllCosts() {
+            const costs = {
+                units: 0, unitsDetails: [],
+                installationBase: 0, installationFirstFloorAddon: 0, installationPipingLabour: 0, installationTotal: 0, installationDetails: [],
+                pipingAdditionalCost: 0, trunkingCost: 0, bracketsCost: 0, materialsTotal: 0, materialsDetails: [],
+                additionalFeatures: 0, additionalFeaturesDetails: [],
+                subtotalExclVAT: 0, vatAmount: 0, totalInclVAT: 0
+            };
+
+            const additionalPipingLength = parseFloat(pipingSlider.value) || 0;
+            const numRecommendedUnits = (currentlyRecommendedUnits && typeof currentlyRecommendedUnits.length !== 'undefined') ? currentlyRecommendedUnits.length : 0;
+
+            if (numRecommendedUnits > 0) { 
+                currentlyRecommendedUnits.forEach(unit => {
+                    costs.units += unit.priceExclVAT;
+                    costs.unitsDetails.push({ 
+                        description: `${unit.brand} ${unit.btu / 1000}K BTU`, 
+                        price: unit.priceExclVAT 
+                    });
+                });
+
+                costs.installationBase = numRecommendedUnits * INSTALL_PER_UNIT_EXCL_VAT;
+                costs.installationDetails.push({
+                    description: `Base installation (${numRecommendedUnits} unit${numRecommendedUnits > 1 ? 's' : ''})`,
+                    price: costs.installationBase
+                });
+
+                if (installationLocationSelect.value === 'first_floor') {
+                    costs.installationFirstFloorAddon = numRecommendedUnits * FIRST_FLOOR_ADDON_EXCL_VAT;
+                    costs.installationDetails.push({
+                        description: `First floor surcharge (${numRecommendedUnits} unit${numRecommendedUnits > 1 ? 's' : ''})`,
+                        price: costs.installationFirstFloorAddon
+                    });
+                }
+            
+                if (additionalPipingLength > 0) {
+                    const pipingIncrements = Math.ceil(additionalPipingLength / 5);
+                    costs.installationPipingLabour = pipingIncrements * ADDITIONAL_PIPING_LABOUR_SURCHARGE_EXCL_VAT;
+                    costs.installationDetails.push({
+                        description: `Piping labour surcharge (${pipingIncrements} x 5ft increments)`,
+                        price: costs.installationPipingLabour
+                    });
+                }
+                costs.installationTotal = costs.installationBase + costs.installationFirstFloorAddon + costs.installationPipingLabour;
+
+                const totalPipingForTrunking = (numRecommendedUnits * INCLUDED_PIPING_PER_UNIT) + additionalPipingLength;
+                const numberOfTrunkingNeeded = Math.ceil(totalPipingForTrunking / 10);
+                if (numberOfTrunkingNeeded > 0) {
+                    costs.trunkingCost = numberOfTrunkingNeeded * TRUNKING_10FT_EXCL_VAT;
+                    costs.materialsDetails.push({
+                        description: `Trunking (${numberOfTrunkingNeeded} length${numberOfTrunkingNeeded > 1 ? 's' : ''} for ${totalPipingForTrunking.toFixed(0)}ft total)`,
+                        price: costs.trunkingCost
+                    });
+                }
+
+                costs.bracketsCost = numRecommendedUnits * BRACKET_PER_UNIT_EXCL_VAT;
+                if (costs.bracketsCost > 0) { 
+                    costs.materialsDetails.push({
+                        description: `Brackets (${numRecommendedUnits} unit${numRecommendedUnits > 1 ? 's' : ''})`,
+                        price: costs.bracketsCost
+                    });
+                }
+            }
+            if (additionalPipingLength > 0) {
+                costs.pipingAdditionalCost = additionalPipingLength * PIPING_PER_FOOT_EXCL_VAT;
+                 if (costs.pipingAdditionalCost > 0) { 
+                    if (!costs.materialsDetails.some(d => d.description.includes('Additional piping material'))) {
+                         costs.materialsDetails.push({
+                            description: `Additional piping material (${additionalPipingLength} ft)`,
+                            price: costs.pipingAdditionalCost
+                        });
+                    }
+                }
+            } else {
+                 costs.pipingAdditionalCost = 0; 
+            }
+            costs.materialsTotal = costs.pipingAdditionalCost + costs.trunkingCost + costs.bracketsCost;
+
+            if (lgPurificationCheckbox.checked) {
+                const price = parseFloat(lgPurificationCheckbox.dataset.price);
+                costs.additionalFeatures += price;
+                costs.additionalFeaturesDetails.push({ description: "LG Air Purification System", price: price });
+            }
+            if (wifiRemoteCheckbox.checked) {
+                const price = parseFloat(wifiRemoteCheckbox.dataset.price); 
+                costs.additionalFeatures += price;
+                costs.additionalFeaturesDetails.push({ description: "WiFi Remote Control", price: price });
+            }
+            
+            costs.subtotalExclVAT = costs.units + costs.installationTotal + costs.materialsTotal + costs.additionalFeatures;
+            costs.vatAmount = costs.subtotalExclVAT * VAT_RATE;
+            costs.totalInclVAT = costs.subtotalExclVAT + costs.vatAmount;
+
+            return costs;
+        };
+        formatPrice = function(amount) {
+             if (typeof amount !== 'number' || isNaN(amount)) {
+                return 'TT$0.00'; 
+            }
+            return `TT$${amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+        };
+        updateCostDisplay = function(costs) {
+            costUnitsTotalDisplay.textContent = formatPrice(costs.units);
+            costUnitsSubItemsDetailsDisplay.innerHTML = costs.unitsDetails.map(item => 
+                `<span class="cost-item sub-item"><span>${item.description}:</span> <span class="sub-item-price">${formatPrice(item.price)}</span></span>`
+            ).join('');
+
+            costInstallationTotalDisplay.textContent = formatPrice(costs.installationTotal);
+            costInstallationSubItemsDetailsDisplay.innerHTML = costs.installationDetails.map(item =>
+                `<span class="cost-item sub-item"><span>${item.description}:</span> <span class="sub-item-price">${formatPrice(item.price)}</span></span>`
+            ).join('');
+            
+            costMaterialsTotalDisplay.textContent = formatPrice(costs.materialsTotal);
+            costMaterialsSubItemsDetailsDisplay.innerHTML = costs.materialsDetails.map(item =>
+                `<span class="cost-item sub-item"><span>${item.description}:</span> <span class="sub-item-price">${formatPrice(item.price)}</span></span>`
+            ).join('');
+
+            if (costs.additionalFeatures > 0 || costs.additionalFeaturesDetails.length > 0) {
+                costAdditionalFeaturesSummaryDiv.style.display = 'flex'; 
+                costAdditionalFeaturesSubItemsDetailsDisplay.style.display = 'block'; 
+                costAdditionalFeaturesTotalDisplay.textContent = formatPrice(costs.additionalFeatures);
+                costAdditionalFeaturesSubItemsDetailsDisplay.innerHTML = costs.additionalFeaturesDetails.map(item =>
+                     `<span class="cost-item sub-item"><span>${item.description}:</span> <span class="sub-item-price">${formatPrice(item.price)}</span></span>`
+                ).join('');
+            } else {
+                costAdditionalFeaturesSummaryDiv.style.display = 'none';
+                costAdditionalFeaturesSubItemsDetailsDisplay.style.display = 'none';
+                costAdditionalFeaturesSubItemsDetailsDisplay.innerHTML = '';
+            }
+
+            totalSubtotalDisplay.textContent = formatPrice(costs.subtotalExclVAT);
+            totalVatDisplay.textContent = formatPrice(costs.vatAmount);
+            totalFinalVatDisplay.textContent = formatPrice(costs.totalInclVAT);
+        };
+        
+        calculateAndUpdateAll = function() {
+            calculateSquareFootage(); 
+            calculateRequiredBTU(); 
+            currentlyRecommendedUnits = recommendUnits(currentRequiredBTU, systemTypeSelect.value, brandSelect.value); 
+            updateDisplayValues(); 
+            
+            currentCosts = calculateAllCosts(); 
+            updateCostDisplay(currentCosts);    
+            
+            calculateEnergySavings(); 
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            currentHoursOfUse = parseInt(hoursOfUseSlider.value); 
+            hoursValueDisplay.textContent = currentHoursOfUse + ' hrs';
+            pipingValueDisplay.textContent = pipingSlider.value + ' ft';
+            setupEventListeners();
+            updateBrandDropdown(); 
+            calculateAndUpdateAll(); 
+        });
+    </script>
+
+</body>
+</html>
