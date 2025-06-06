@@ -6,30 +6,113 @@
     <title>Servair Limited - HVAC System Pricing Calculator</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* CSS Color Variables for Theming */
+        :root {
+            --bg-color: #f0f4f8;
+            --container-bg-color: #ffffff;
+            --text-color-primary: #2c3e50;
+            --text-color-secondary: #495057;
+            --text-color-muted: #6c757d;
+            --border-color: #e0e0e0;
+            --input-border-color: #ced4da;
+            --info-box-bg: #f8f9fa;
+            --info-box-border: #e9ecef;
+            --input-bg: #ffffff;
+            --accent-color: #007bff;
+        }
+
+        body.dark-mode {
+            --bg-color: #121212;
+            --container-bg-color: #1e1e1e;
+            --text-color-primary: #edf2f7;
+            --text-color-secondary: #a0aec0;
+            --text-color-muted: #718096;
+            --border-color: #4a5568;
+            --input-border-color: #4a5568;
+            --info-box-bg: #2d3748;
+            --info-box-border: #4a5568;
+            --input-bg: #2d3748;
+        }
+
         body {
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f0f4f8;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color-primary);
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .calculator-container {
-            background-color: #fff;
+            background-color: var(--container-bg-color);
             border-radius: 12px; 
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); 
             width: 100%;
             max-width: 1100px;
             padding: 30px; 
             box-sizing: border-box;
+            transition: background-color 0.3s ease;
         }
 
         header {
             text-align: center;
             margin-bottom: 35px;
+            position: relative;
+        }
+        
+        /* Dark Mode Toggle Switch */
+        .theme-switch-wrapper {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .theme-switch-label {
+             margin-right: 10px;
+             font-size: 14px;
+             font-weight: 600;
+             color: var(--text-color-secondary);
+        }
+        .theme-switch {
+            display: inline-block;
+            height: 24px;
+            position: relative;
+            width: 50px;
+        }
+        .theme-switch input {
+            display:none;
+        }
+        .theme-slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .theme-slider:before {
+            background-color: #fff;
+            bottom: 3px;
+            content: "";
+            height: 18px;
+            left: 3px;
+            position: absolute;
+            transition: .4s;
+            width: 18px;
+            border-radius: 50%;
+        }
+        input:checked + .theme-slider {
+            background-color: var(--accent-color);
+        }
+        input:checked + .theme-slider:before {
+            transform: translateX(26px);
         }
 
         #company-logo {
@@ -41,7 +124,7 @@
         header p.subtitle { 
             font-size: 20px; 
             font-weight: 700; 
-            color: #2c3e50;
+            color: var(--text-color-primary);
             font-family: 'Inter', sans-serif; 
         }
 
@@ -61,11 +144,10 @@
             min-width: 300px; 
         }
 
-        /* Modern Tab Styling */
         .tabs {
+            border-bottom: 1px solid var(--border-color); 
             margin-bottom: 25px;
             display: flex; 
-            border-bottom: 1px solid #e0e0e0; 
         }
 
         .tabs button {
@@ -75,21 +157,20 @@
             cursor: pointer;
             font-size: 15px; 
             font-weight: 600;
-            color: #555; 
+            color: var(--text-color-muted);
             margin-right: 10px; 
             border-bottom: 3px solid transparent; 
             transition: color 0.2s ease, border-color 0.2s ease;
         }
         .tabs button:hover {
-            color: #007bff;
+            color: var(--accent-color);
         }
         .tabs button.active {
-            color: #007bff; 
-            border-bottom: 3px solid #007bff; 
+            color: var(--accent-color);
+            border-bottom: 3px solid var(--accent-color);
             font-weight: 700;
         }
-        /* End Modern Tab Styling */
-
+        
         .tab-content {
             display: none; 
         }
@@ -108,13 +189,13 @@
             font-weight: 600;
             margin-bottom: 8px;
             font-size: 14px;
-            color: #495057;
+            color: var(--text-color-secondary);
         }
-        .form-group label .label-note { /* Style for the note under the label */
+        .form-group label .label-note { 
             display: block;
             font-size: 0.85em;
             font-weight: normal;
-            color: #6c757d;
+            color: var(--text-color-muted);
             margin-top: 3px;
         }
 
@@ -126,14 +207,16 @@
         .form-group select {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ced4da;
+            border: 1px solid var(--input-border-color);
             border-radius: 6px; 
             box-sizing: border-box;
             font-size: 14px;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background-color: var(--input-bg);
+            color: var(--text-color-primary);
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            border-color: #007bff;
+            border-color: var(--accent-color);
             box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
             outline: none;
         }
@@ -171,7 +254,7 @@
         .checkbox-label { 
             font-weight: normal;
             font-size: 14px;
-            color: #495057; 
+            color: var(--text-color-secondary);
         }
 
 
@@ -196,14 +279,14 @@
         }
         .slider-info {
             font-size: 0.8em;
-            color: #6c757d;
+            color: var(--text-color-muted);
             margin-top: 8px; 
             line-height: 1.4; 
         }
 
         .info-box {
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
+            background-color: var(--info-box-bg);
+            border: 1px solid var(--info-box-border);
             border-radius: 8px; 
             padding: 15px;
             margin-bottom: 20px;
@@ -211,7 +294,7 @@
 
         .info-box h3 {
             font-size: 16px;
-            color: #343a40;
+            color: var(--text-color-primary);
             margin-top: 0;
             margin-bottom: 10px;
         }
@@ -219,12 +302,12 @@
         .info-box p {
             font-size: 14px;
             margin-bottom: 5px;
-            color: #495057;
+            color: var(--text-color-secondary);
             line-height: 1.5;
         }
         .info-box p strong {
             float: right;
-            color: #2c3e50;
+            color: var(--text-color-primary);
         }
          .recommended-units-container { 
             margin-top: 10px;
@@ -234,12 +317,12 @@
             font-size: 14px;
             margin-bottom: 8px;
             display:block;
+            color: var(--text-color-secondary);
         }
 
-        /* Gradient Recommended Unit Links (Styled as Buttons) */
         .recommended-units-buttons a {
-            display: inline-block; /* Makes the anchor behave like a block for padding/margin */
-            text-decoration: none; /* Remove default link underline */
+            display: inline-block;
+            text-decoration: none; 
             background-image: linear-gradient(to right, #007bff 0%, #00bfa5 100%); 
             border: none; 
             color: white; 
@@ -258,7 +341,6 @@
             transform: translateY(-2px); 
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
-        /* Spans within the link will inherit text color, adjust if needed */
         .recommended-units-buttons a .unit-brand {
              display: block;
              font-weight: 700; 
@@ -266,10 +348,9 @@
         .recommended-units-buttons a .unit-details {
             display: block;
             font-size: 0.9em;
-            color: #e0e0e0; /* Light color for details on gradient */
+            color: #e0e0e0; 
             margin-top: 2px;
         }
-        /* End Gradient Recommended Unit Links Styling */
 
 
         .upgrade-box {
@@ -366,17 +447,17 @@
         }
         .cost-breakdown > h3 { 
              font-size: 18px; 
-            color: #343a40;
+            color: var(--text-color-primary);
             margin-top: 0;
             margin-bottom: 15px; 
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
             padding-bottom: 8px;
         }
         .cost-breakdown > .cost-item > .description,
         #cost-additional-features-summary > .description {
             font-weight: bold;
             font-style: italic;
-            color: #2c3e50; 
+            color: var(--text-color-primary); 
         }
 
 
@@ -388,15 +469,15 @@
             padding: 4px 0;
         }
         .cost-item .description, .total-item .description { 
-            color: #495057;
+            color: var(--text-color-secondary);
         }
         .cost-item .value, .total-item .value {
             font-weight: 600;
-            color: #2c3e50;
+            color: var(--text-color-primary);
         }
         .cost-item .sub-item { 
             font-size: 0.9em;
-            color: #6c757d;
+            color: var(--text-color-muted);
             padding-left: 20px; 
             margin-top: 4px;
             display: block; 
@@ -418,11 +499,11 @@
         .total-final .value {
             font-weight: bold;
             font-size: 18px;
-            color: #007bff;
+            color: var(--accent-color);
         }
 
         .request-quote-btn {
-            background-color: #007bff;
+            background-color: var(--accent-color);
             color: white;
             padding: 12px 20px;
             border: none;
@@ -436,14 +517,7 @@
             transition: background-color 0.2s ease;
         }
         .request-quote-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .disclaimer {
-            font-size: 12px;
-            color: #6c757d;
-            text-align: center;
-            margin-top: 20px;
+            background-color: #0056b3; 
         }
         
         .modal {
@@ -459,10 +533,10 @@
         }
 
         .modal-content {
-            background-color: #fefefe;
+            background-color: var(--container-bg-color);
             margin: 10% auto; 
             padding: 25px;
-            border: 1px solid #888;
+            border: 1px solid var(--border-color);
             width: 90%;
             max-width: 500px; 
             border-radius: 8px;
@@ -470,8 +544,8 @@
         }
         .modal-content h2 {
             margin-top: 0;
-            color: #333;
-            border-bottom: 1px solid #eee;
+            color: var(--text-color-primary);
+            border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
             margin-bottom: 20px;
             font-family: 'Inter', sans-serif;
@@ -491,9 +565,9 @@
             transition: background-color 0.2s ease, border-color 0.2s ease;
         }
         .modal-buttons .btn-primary {
-            background-color: #007bff;
+            background-color: var(--accent-color);
             color: white;
-            border-color: #007bff;
+            border-color: var(--accent-color);
         }
          .modal-buttons .btn-primary:hover {
             background-color: #0056b3;
@@ -569,178 +643,185 @@
 
     <div class="calculator-container">
         <header>
+             <div class="theme-switch-wrapper">
+                <span class="theme-switch-label">Dark Mode</span>
+                <label class="theme-switch" for="dark-mode-toggle">
+                    <input type="checkbox" id="dark-mode-toggle" />
+                    <span class="theme-slider"></span>
+                </label>
+            </div>
             <img src="https://servair.com/media/logo/stores/1/servairlogo.png" alt="Servair Limited Logo" id="company-logo">
             <p class="subtitle">HVAC System Pricing Calculator</p>
         </header>
 
         <div class="main-content">
             <section class="input-section">
-                 <div class="tabs">
-                    <button id="tab-sqft" class="active" data-tab="sqft">Square Footage</button>
-                    <button id="tab-dims" data-tab="dims">Room Dimensions</button>
-                </div>
+                <div class="tabs">
+                   <button id="tab-sqft" class="active" data-tab="sqft">Square Footage</button>
+                   <button id="tab-dims" data-tab="dims">Room Dimensions</button>
+               </div>
 
-                <h2>System Requirements</h2>
+               <h2>System Requirements</h2>
 
-                <div id="content-sqft" class="tab-content active">
-                    <div class="form-group">
-                        <label for="room-size-sqft">Room Size (Square Feet)</label>
-                        <input type="number" id="room-size-sqft" value="500" placeholder="e.g. 500" min="0">
-                    </div>
-                </div>
+               <div id="content-sqft" class="tab-content active">
+                   <div class="form-group">
+                       <label for="room-size-sqft">Room Size (Square Feet)</label>
+                       <input type="number" id="room-size-sqft" value="500" placeholder="e.g. 500" min="0">
+                   </div>
+               </div>
 
-                <div id="content-dims" class="tab-content">
-                    <label>Room Dimensions</label> 
-                    <div class="dimension-inputs">
-                        <div class="form-group">
-                             <input type="number" id="room-length" placeholder="e.g. 20" min="0">
-                            <label for="room-length">Length (ft)</label>
-                        </div>
-                        <div class="form-group">
-                           <input type="number" id="room-width" placeholder="e.g. 25" min="0">
-                            <label for="room-width">Width (ft)</label>
-                        </div>
-                    </div>
-                </div>
+               <div id="content-dims" class="tab-content">
+                   <label>Room Dimensions</label> 
+                   <div class="dimension-inputs">
+                       <div class="form-group">
+                            <input type="number" id="room-length" placeholder="e.g. 20" min="0">
+                           <label for="room-length">Length (ft)</label>
+                       </div>
+                       <div class="form-group">
+                          <input type="number" id="room-width" placeholder="e.g. 25" min="0">
+                           <label for="room-width">Width (ft)</label>
+                       </div>
+                   </div>
+               </div>
 
-                <div class="form-group">
-                    <label for="num-windows">Number of Windows</label>
-                    <input type="number" id="num-windows" value="2" placeholder="e.g. 2" min="0">
-                </div>
+               <div class="form-group">
+                   <label for="num-windows">Number of Windows</label>
+                   <input type="number" id="num-windows" value="2" placeholder="e.g. 2" min="0">
+               </div>
 
-                <div class="form-group form-group-checkbox">
-                    <input type="checkbox" id="contains-kitchen">
-                    <label for="contains-kitchen" class="checkbox-label">Room Contains Kitchen?</label>
-                </div>
+               <div class="form-group form-group-checkbox">
+                   <input type="checkbox" id="contains-kitchen">
+                   <label for="contains-kitchen" class="checkbox-label">Room Contains Kitchen?</label>
+               </div>
 
-                <div class="form-group">
-                    <label for="system-type">System Efficiency Options</label>
-                    <select id="system-type">
-                        <option value="seer11" selected>Standard Efficiency (SEER 11)</option>
-                        <option value="seer18">High Efficiency (SEER 18+)</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="brand-select">Brand</label>
-                    <select id="brand-select">
-                        <option value="">-- Select Brand --</option>
-                    </select>
-                </div>
+               <div class="form-group">
+                   <label for="system-type">System Efficiency Options</label>
+                   <select id="system-type">
+                       <option value="seer11" selected>Standard Efficiency (SEER 11)</option>
+                       <option value="seer18">High Efficiency (SEER 18+)</option>
+                   </select>
+               </div>
+               
+               <div class="form-group">
+                   <label for="brand-select">Brand</label>
+                   <select id="brand-select">
+                       <option value="">-- Select Brand --</option>
+                   </select>
+               </div>
 
-                <div class="form-group">
-                    <label for="installation-location">Installation Location</label>
-                    <select id="installation-location">
-                        <option value="ground_floor" selected>Ground Floor</option>
-                        <option value="first_floor">First Floor</option>
-                        <option value="roof">Roof</option>
-                    </select>
-                </div>
+               <div class="form-group">
+                   <label for="installation-location">Installation Location</label>
+                   <select id="installation-location">
+                       <option value="ground_floor" selected>Ground Floor</option>
+                       <option value="first_floor">First Floor</option>
+                       <option value="roof">Roof</option>
+                   </select>
+               </div>
 
-                <div class="form-group">
-                    <label for="additional-piping">Total Additional Piping Length
-                        <span class="label-note"><b>Please read the guide under the slider before using it.</b></span>
-                    </label>
-                    <div class="slider-container">
-                        <input type="range" id="additional-piping" min="0" max="60" value="0" step="1">
-                        <span class="slider-value" id="piping-value">0 ft</span>
-                    </div>
-                    <p class="slider-info">
-                        Each recommended unit includes 10ft of piping in its cost. 
-                        Please input any *additional* piping length required if the distance between an evaporator (indoor unit) 
-                        and its condenser (outdoor unit) exceeds this included 10ft. This value is the sum for all units.
-                    </p>
-                </div>
+               <div class="form-group">
+                   <label for="additional-piping">Total Additional Piping Length
+                       <span class="label-note"><b>Please read the guide under the slider before using it.</b></span>
+                   </label>
+                   <div class="slider-container">
+                       <input type="range" id="additional-piping" min="0" max="60" value="0" step="1">
+                       <span class="slider-value" id="piping-value">0 ft</span>
+                   </div>
+                   <p class="slider-info">
+                       Each recommended unit includes 10ft of piping in its cost. 
+                       Please input any *additional* piping length required if the distance between an evaporator (indoor unit) 
+                       and its condenser (outdoor unit) exceeds this included 10ft. This value is the sum for all units.
+                   </p>
+               </div>
 
-                <h2>Additional Features</h2>
-                <div class="form-group form-group-checkbox">
-                    <input type="checkbox" id="lg-purification" data-price="5100">
-                    <label for="lg-purification" class="checkbox-label">LG Air Purification System (TT$5,100)</label>
-                </div>
-                <div class="form-group form-group-checkbox">
-                    <input type="checkbox" id="wifi-remote" data-price="250">
-                    <label for="wifi-remote" class="checkbox-label">WiFi Remote Control (TT$250)</label>
-                </div>
-            </section>
+               <h2>Additional Features</h2>
+               <div class="form-group form-group-checkbox">
+                   <input type="checkbox" id="lg-purification" data-price="5100">
+                   <label for="lg-purification" class="checkbox-label">LG Air Purification System (TT$5,100)</label>
+               </div>
+               <div class="form-group form-group-checkbox">
+                   <input type="checkbox" id="wifi-remote" data-price="250">
+                   <label for="wifi-remote" class="checkbox-label">WiFi Remote Control (TT$250)</label>
+               </div>
+           </section>
 
-            <section class="output-section">
-                <div class="info-box">
-                    <h3>Your HVAC System</h3>
-                    <p>Room Size <strong id="display-room-size">0 sq ft</strong></p>
-                    <p>Required BTU <strong id="display-req-btu">0 BTU</strong></p>
-                    <div class="recommended-units-container">
-                        <span class="title">Recommended Units (Click on Unit to view on our Site)</span>
-                         <div class="recommended-units-buttons" id="recommended-units-display">
-                        </div>
-                    </div>
-                </div>
+           <section class="output-section">
+               <div class="info-box">
+                   <h3>Your HVAC System</h3>
+                   <p>Room Size <strong id="display-room-size">0 sq ft</strong></p>
+                   <p>Required BTU <strong id="display-req-btu">0 BTU</strong></p>
+                   <div class="recommended-units-container">
+                       <span class="title">Recommended Units (Click on Unit to view on our Site)</span>
+                        <div class="recommended-units-buttons" id="recommended-units-display">
+                       </div>
+                   </div>
+               </div>
 
-                <div class="upgrade-box upgrade-box-potential" id="upgrade-savings-box">
-                    <h4 id="upgrade-box-title">See your savings if you upgrade to High Efficiency</h4>
-                    <div class="hours-slider-group">
-                        <label for="hours-of-use" class="hours-label">Hours of Use per Day</label>
-                        <div class="slider-container">
-                            <input type="range" id="hours-of-use" min="1" max="24" value="8" step="1">
-                            <span class="slider-value" id="hours-value">8 hrs</span>
-                        </div>
-                    </div>
-                    <p>Potential Annual Savings <strong id="display-annual-savings">TT$0</strong></p>
-                    <p>Potential 10-Year Savings <strong id="display-10year-savings">TT$0</strong></p>
-                    <span class="switch-text" id="upgrade-box-subtitle">Switch to high efficiency units to save on energy costs</span>
-                </div>
+               <div class="upgrade-box upgrade-box-potential" id="upgrade-savings-box">
+                   <h4 id="upgrade-box-title">See your savings if you upgrade to High Efficiency</h4>
+                   <div class="hours-slider-group">
+                       <label for="hours-of-use" class="hours-label">Hours of Use per Day</label>
+                       <div class="slider-container">
+                           <input type="range" id="hours-of-use" min="1" max="24" value="8" step="1">
+                           <span class="slider-value" id="hours-value">8 hrs</span>
+                       </div>
+                   </div>
+                   <p>Potential Annual Savings <strong id="display-annual-savings">TT$0</strong></p>
+                   <p>Potential 10-Year Savings <strong id="display-10year-savings">TT$0</strong></p>
+                   <span class="switch-text" id="upgrade-box-subtitle">Switch to high efficiency units to save on energy costs</span>
+               </div>
 
-                <div class="cost-breakdown">
-                    <h3>Cost Breakdown</h3>
-                    <div class="cost-item">
-                        <span class="description">Units</span>
-                        <span class="value" id="cost-units-total">TT$0</span>
-                    </div>
-                    <div id="cost-units-sub-items-details"></div>
-                    
-                    <div class="cost-item">
-                        <span class="description">Installation</span>
-                        <span class="value" id="cost-installation-total">TT$0</span>
-                    </div>
-                     <div id="cost-installation-sub-items-details"></div>
-                    
-                    <div class="cost-item">
-                        <span class="description">Installation Materials</span>
-                        <span class="value" id="cost-materials-total">TT$0</span>
-                    </div>
-                     <div id="cost-materials-sub-items-details"></div>
+               <div class="cost-breakdown">
+                   <h3>Cost Breakdown</h3>
+                   <div class="cost-item">
+                       <span class="description">Units</span>
+                       <span class="value" id="cost-units-total">TT$0</span>
+                   </div>
+                   <div id="cost-units-sub-items-details"></div>
+                   
+                   <div class="cost-item">
+                       <span class="description">Installation</span>
+                       <span class="value" id="cost-installation-total">TT$0</span>
+                   </div>
+                    <div id="cost-installation-sub-items-details"></div>
+                   
+                   <div class="cost-item">
+                       <span class="description">Installation Materials</span>
+                       <span class="value" id="cost-materials-total">TT$0</span>
+                   </div>
+                    <div id="cost-materials-sub-items-details"></div>
 
-                     <div class="cost-item" id="cost-additional-features-summary" style="display:none;">
-                        <span class="description">Additional Features</span>
-                        <span class="value" id="cost-additional-features-total">TT$0</span>
-                    </div>
-                     <div id="cost-additional-features-sub-items-details" style="display:none;"></div>
-                </div>
+                    <div class="cost-item" id="cost-additional-features-summary" style="display:none;">
+                       <span class="description">Additional Features</span>
+                       <span class="value" id="cost-additional-features-total">TT$0</span>
+                   </div>
+                    <div id="cost-additional-features-sub-items-details" style="display:none;"></div>
+               </div>
 
-                <div class="totals-section">
-                    <div class="total-item">
-                        <span class="description">Subtotal (excl. VAT)</span>
-                        <span class="value" id="total-subtotal">TT$0</span>
-                    </div>
-                    <div class="total-item">
-                        <span class="description">VAT (12.5%)</span>
-                        <span class="value" id="total-vat">TT$0</span>
-                    </div>
-                    <hr>
-                    <div class="total-item total-final">
-                        <span class="description">Total (incl. VAT)</span>
-                        <span class="value" id="total-final-vat">TT$0</span>
-                    </div>
-                </div>
+               <div class="totals-section">
+                   <div class="total-item">
+                       <span class="description">Subtotal (excl. VAT)</span>
+                       <span class="value" id="total-subtotal">TT$0</span>
+                   </div>
+                   <div class="total-item">
+                       <span class="description">VAT (12.5%)</span>
+                       <span class="value" id="total-vat">TT$0</span>
+                   </div>
+                   <hr>
+                   <div class="total-item total-final">
+                       <span class="description">Total (incl. VAT)</span>
+                       <span class="value" id="total-final-vat">TT$0</span>
+                   </div>
+               </div>
 
-                <div class="info-box">
-                    <h3>System Information</h3>
-                    <p>SEER Rating <strong id="display-seer-rating">0</strong></p>
-                    <p>Type <strong id="display-system-type">Highwall Split</strong></p>
-                </div>
+               <div class="info-box">
+                   <h3>System Information</h3>
+                   <p>SEER Rating <strong id="display-seer-rating">0</strong></p>
+                   <p>Type <strong id="display-system-type">Highwall Split</strong></p>
+               </div>
 
-                <button class="request-quote-btn" id="request-quote-main-btn">Request Detailed Quote</button>
-                <p class="disclaimer">All prices are exclusive of VAT unless otherwise stated.</p>
-            </section>
+               <button class="request-quote-btn" id="request-quote-main-btn">Request Detailed Quote</button>
+               <p class="disclaimer">All prices are exclusive of VAT unless otherwise stated.</p>
+           </section>
         </div>
     </div>
 
@@ -807,7 +888,7 @@
         const INCLUDED_PIPING_PER_UNIT = 10;
         const ADDITIONAL_PIPING_LABOUR_SURCHARGE_INCL_VAT = 50;
         const ADDITIONAL_PIPING_LABOUR_SURCHARGE_EXCL_VAT = parseFloat((ADDITIONAL_PIPING_LABOUR_SURCHARGE_INCL_VAT / (1 + VAT_RATE)).toFixed(2));
-        const WHATSAPP_NUMBER = "18686581911"; 
+        const WHATSAPP_NUMBER = "18686581911";
 
 
         const rawUnitsArray = [
@@ -1290,7 +1371,6 @@
                     link.target = '_blank'; 
                     link.rel = 'noopener noreferrer'; 
                     
-                    // The content (brand and details) is now directly inside the anchor
                     const brandSpan = document.createElement('span');
                     brandSpan.className = 'unit-brand';
                     brandSpan.textContent = unit.brand;
@@ -1471,6 +1551,28 @@
             setupEventListeners();
             updateBrandDropdown(); 
             calculateAndUpdateAll(); 
+            
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            function enableDarkMode() {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            }
+            function disableDarkMode() {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                darkModeToggle.checked = true;
+                enableDarkMode();
+            }
+            darkModeToggle.addEventListener('change', () => {
+                if (darkModeToggle.checked) {
+                    enableDarkMode();
+                } else {
+                    disableDarkMode();
+                }
+            });
         });
     </script>
 
