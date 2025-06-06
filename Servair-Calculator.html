@@ -61,6 +61,7 @@
             text-align: center;
             margin-bottom: 35px;
             position: relative;
+            padding-top: 40px; /* Add space at the top for the switch */
         }
         
         /* Dark Mode Toggle Switch */
@@ -134,16 +135,15 @@
             gap: 30px;
         }
 
-        .input-section {
+        .input-section, .output-section {
             flex: 1.2; 
             min-width: 300px; 
         }
 
         .output-section {
             flex: 1;
-            min-width: 300px; 
         }
-
+        
         .tabs {
             border-bottom: 1px solid var(--border-color); 
             margin-bottom: 25px;
@@ -859,7 +859,7 @@
                 <div class="modal-buttons">
                     <button type="button" class="btn-secondary" id="modal-back-btn">Back</button>
                     <button type="button" class="btn-whatsapp" id="modal-submit-whatsapp-btn">
-                        <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d=" M19.11 17.205c-.372 0-1.088 1.39-1.088 1.39s-.213.575-.327.575c-.114 0-.577-.213-.577-.213s-1.092-.787-1.849-.787c-.372 0-.99.426-1.237.426h-.002c-.246 0-.873-.213-.873-.213s-1.092-.787-1.849-.787c-.372 0-.99.426-1.237.426h-.002c-.246 0-.873-.213-.873-.213s-1.092-.787-1.849-.787c-.372 0-.99.426-1.237.426h-.002c-.246 0-.873-.213-.873-.213s-.213-.575-.327-.575c-.114 0-.577.213-.577.213s-1.092.787-1.849.787c-.372 0-.99.426-1.237.426h-.002c-.246 0-.873-.213-.873-.213s-1.092-.787-1.849-.787c-.372 0-.99.426-1.237.426h-.002c-.246 0-.873-.213-.873-.213s-.213-.575-.327-.575c-.114 0-.577.213-.577.213s-.922.735-1.73.735c-.487 0-1.233-.264-1.233-.264S4 18.422 4 16.967c0-1.342 1.038-2.59 2.605-2.59h.002c.372 0 1.088-1.39 1.088-1.39s.213-.575.327-.575c.114 0 .577.213.577.213s1.092.787 1.849.787c.372 0 .99-.426 1.237-.426h.002c.246 0 .873.213.873.213s1.092.787 1.849.787c.372 0 .99-.426 1.237-.426h.002c.246 0 .873.213.873.213s1.092.787 1.849.787c.372 0 .99-.426 1.237-.426h.002c.246 0 .873.213.873.213s1.092.787 1.849.787c.372 0 .99-.426 1.237-.426h.002c.246 0 .873.213.873.213s.213.575.327.575c.114 0 .577-.213.577-.213s.922-.735 1.73-.735c.487 0 1.233.264 1.233.264S28 13.033 28 14.488c0 1.342-1.038 2.59-2.605 2.59h-.002c-.372 0-1.088 1.39-1.088 1.39s-.213.575-.327-.575c-.114 0-.577-.213-.577-.213s-1.092-.787-1.849-.787zm-7.972-2.402c0-.414-.335-.75-.75-.75s-.75.336-.75.75v.375c0 .414.335.75.75.75s.75-.336.75-.75v-.375zm-2.24-.001c0-.414-.335-.75-.75-.75s-.75.336-.75.75v.375c0 .414.335.75.75.75s.75-.336.75-.75v-.375zm-2.24.001c0-.414-.335-.75-.75-.75s-.75.336-.75.75v.375c0 .414.335.75.75.75s.75-.336.75-.75v-.375zm-2.24-.001c0-.414-.335-.75-.75-.75s-.75.336-.75.75v.375c0 .414.335.75.75.75s.75-.336.75-.75v-.375zm-2.24.001c0-.414-.335-.75-.75-.75s-.75.336-.75.75v.375c0 .414.335.75.75.75s.75-.336.75-.75v-.375z"></path></svg>
+                        <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d=" M19.11 17.205c-.372 0-1.088 1.39-1.088 1.39s-.213.575-.327.575c-.114 0-.577-.213-.577-.213s-1.092-.787-1.849-.787c-.372 0-.99.426-1.237.426h-.002c-.246 0-.873-.213-.873-.213s-1.092-.787-1.849-.787c-.372 0-.99.426-1.237.426h-.002c-.246 0-.873-.213-.873-.213s-1.092-.787-1.849-.787c-.372 0-.99.426-1.237.426h-.002c-.246 0-.873-.213-.873-.213s-.213-.575-.327-.575c-.114 0-.577.213-.577.213s-1.092.787-1.849.787c-.372 0-.99.426-1.237.426h-.002c-.246 0-.873-.213-.873-.213s-1.092-.787-1.849-.787c-.372 0-.99.426-1.237.426h-.002c-.246 0-.873-.213-.873-.213s-.213-.575-.327-.575c-.114 0-.577.213-.577.213s-.922.735-1.73.735c-.487 0-1.233-.264-1.233-.264S4 18.422 4 16.967c0-1.342 1.038-2.59 2.605-2.59h.002c.372 0 1.088-1.39 1.088-1.39s.213-.575.327-.575c.114 0 .577.213.577.213s1.092.787 1.849.787c.372 0 .99-.426 1.237-.426h.002c.246 0 .873.213.873.213s1.092.787 1.849.787c.372 0 .99-.426 1.237-.426h.002c.246 0 .873.213.873.213s1.092.787 1.849.787c.372 0 .99-.426 1.237-.426h.002c-.246 0 .873.213.873.213s1.092.787 1.849.787c.372 0 .99-.426 1.237-.426h.002c.246 0 .873.213.873.213s.213.575.327.575c.114 0 .577-.213.577-.213s.922-.735 1.73-.735c.487 0 1.233.264 1.233.264S28 13.033 28 14.488c0 1.342-1.038 2.59-2.605 2.59h-.002c-.372 0-1.088 1.39-1.088 1.39s-.213.575-.327-.575c-.114 0-.577-.213-.577-.213s-1.092-.787-1.849-.787zm-7.972-2.402c0-.414-.335-.75-.75-.75s-.75.336-.75.75v.375c0 .414.335.75.75.75s.75-.336.75-.75v-.375zm-2.24-.001c0-.414-.335-.75-.75-.75s-.75.336-.75.75v.375c0 .414.335.75.75.75s.75-.336.75-.75v-.375zm-2.24.001c0-.414-.335-.75-.75-.75s-.75.336-.75.75v.375c0 .414.335.75.75.75s.75-.336.75-.75v-.375zm-2.24-.001c0-.414-.335-.75-.75-.75s-.75.336-.75.75v.375c0 .414.335.75.75.75s.75-.336.75-.75v-.375zm-2.24.001c0-.414-.335-.75-.75-.75s-.75.336-.75.75v.375c0 .414.335.75.75.75s.75-.336.75-.75v-.375z"></path></svg>
                         Submit via WhatsApp
                     </button>
                 </div>
@@ -966,6 +966,7 @@
         const modalNextBtn = document.getElementById('modal-next-btn');
         const modalBackBtn = document.getElementById('modal-back-btn');
         const modalSubmitWhatsappBtn = document.getElementById('modal-submit-whatsapp-btn');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
 
         let currentSqFt = 0;
         let currentRequiredBTU = 0;
@@ -980,7 +981,8 @@
                 roomSizeSqftInput, roomLengthInput, roomWidthInput,
                 numWindowsInput, containsKitchenCheckbox, 
                 pipingSlider, installationLocationSelect,
-                lgPurificationCheckbox, wifiRemoteCheckbox
+                lgPurificationCheckbox, wifiRemoteCheckbox,
+                hoursOfUseSlider 
             ];
             inputsToWatch.forEach(input => {
                 if (input) { 
@@ -1011,7 +1013,7 @@
                  hoursOfUseSlider.addEventListener('input', () => { 
                     currentHoursOfUse = parseInt(hoursOfUseSlider.value);
                     hoursValueDisplay.textContent = currentHoursOfUse + ' hrs';
-                    calculateAndUpdateAll(); 
+                    calculateEnergySavings(); 
                 });
             }
 
@@ -1553,26 +1555,28 @@
             calculateAndUpdateAll(); 
             
             const darkModeToggle = document.getElementById('dark-mode-toggle');
-            function enableDarkMode() {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark');
-            }
-            function disableDarkMode() {
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem('theme', 'light');
-            }
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                darkModeToggle.checked = true;
-                enableDarkMode();
-            }
-            darkModeToggle.addEventListener('change', () => {
-                if (darkModeToggle.checked) {
-                    enableDarkMode();
-                } else {
-                    disableDarkMode();
+            if (darkModeToggle) {
+                function enableDarkMode() {
+                    document.body.classList.add('dark-mode');
+                    localStorage.setItem('theme', 'dark');
                 }
-            });
+                function disableDarkMode() {
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('theme', 'light');
+                }
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'dark') {
+                    darkModeToggle.checked = true;
+                    enableDarkMode();
+                }
+                darkModeToggle.addEventListener('change', () => {
+                    if (darkModeToggle.checked) {
+                        enableDarkMode();
+                    } else {
+                        disableDarkMode();
+                    }
+                });
+            }
         });
     </script>
 
